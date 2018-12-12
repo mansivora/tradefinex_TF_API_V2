@@ -552,6 +552,44 @@ var routes = function(){
             });  
     });
 
+    router.route('/RatingList/:id')
+    .get(function(req,res){
+        var _id = req.params.id;
+        //res.header("Content-Type", "application/json");
+        conn.connect().then(function ()   
+        { 
+            var request = new sql.Request(conn);
+            request.input("ptfur_id", sql.Int, _id);
+            request.execute('UserRating_ListAll').then(function (recordset)   
+                {  
+                    res.status(200).json(recordset.recordset);  
+                    conn.close();  
+                }) 
+                .catch(function (err) {  
+                    conn.close();    
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });
+                });  
+        })
+        .catch(function (err) {  
+            conn.close();  
+            commonFun.errorLog(err);
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            });   
+        });  
+    });
+
     router.route('/RatingAdd/')  
     .post(function (req, res) {  
         conn.connect().then(function () {  
@@ -614,6 +652,44 @@ var routes = function(){
         });  
     }); 
 
+    router.route('/SavedProjectList/:id')
+    .get(function(req,res){
+        var _id = req.params.id;
+        //res.header("Content-Type", "application/json");
+        conn.connect().then(function ()   
+        { 
+            var request = new sql.Request(conn);
+            request.input("ptfusp_id", sql.Int, _id);
+            request.execute('UserSavedProject_ListAll').then(function (recordset)   
+                {  
+                    res.status(200).json(recordset.recordset);  
+                    conn.close();  
+                }) 
+                .catch(function (err) {  
+                    conn.close();    
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });
+                });  
+        })
+        .catch(function (err) {  
+            conn.close();  
+            commonFun.errorLog(err);
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            });   
+        });  
+    });
+
     router.route('/SavedProjectAdd/')  
     .post(function (req, res) {  
         conn.connect().then(function () {  
@@ -672,6 +748,44 @@ var routes = function(){
             });        
         });  
     }); 
+
+    router.route('/ServicesList/:id')
+    .get(function(req,res){
+        var _id = req.params.id;
+        //res.header("Content-Type", "application/json");
+        conn.connect().then(function ()   
+        { 
+            var request = new sql.Request(conn);
+            request.input("ptfus_id", sql.Int, _id);
+            request.execute('UserServices_ListAll').then(function (recordset)   
+                {  
+                    res.status(200).json(recordset.recordset);  
+                    conn.close();  
+                }) 
+                .catch(function (err) {  
+                    conn.close();    
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });
+                });  
+        })
+        .catch(function (err) {  
+            conn.close();  
+            commonFun.errorLog(err);
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            });   
+        });  
+    });
 
     router.route('/ServicesAdd/')  
     .post(function (req, res) {  
@@ -738,6 +852,68 @@ var routes = function(){
         });  
     }); 
 
+    router.route('/ServicesUpdate/')  
+    .post(function (req, res) {  
+        conn.connect().then(function () {  
+            var transaction = new sql.Transaction(conn);  
+            transaction.begin().then(function () {  
+                var request = new sql.Request(transaction); 
+                request.input("ptfus_id", sql.Int, _id);
+                request.input("ptfus_name", sql.Text, req.body.ptfus_name);
+                request.input("ptfus_description", sql.Text, req.body.ptfus_description);
+                request.input("ptfus_category_ref", sql.Int, req.body.ptfus_category_ref);
+                request.input("ptfus_user_ref", sql.Int, req.body.ptfus_user_ref);
+                request.input("ptfus_user_type_ref", sql.Int, req.body.ptfus_user_type_ref);
+                request.input("ptfus_admin_approval", sql.Int, req.body.ptfus_admin_approval);
+                request.input("ptfus_rejection_reason", sql.Text, req.body.ptfus_rejection_reason);
+                request.input("prow_deleted", sql.Int, req.body.prow_deleted);
+                request.execute("UserServices_Update").then(function () {  
+                    transaction.commit().then(function (err, recordSet) {
+                        conn.close();  
+                        //res.json(recordSet.recordset);
+                        res.status(200).json( {
+                            success: true,
+                            message: 'successful'
+                        });
+                    }).catch(function (err) {  
+                        conn.close();  
+                        commonFun.errorLog(err);
+                        res.status(404).json( {
+                            success: false,
+                            message: '404 - Not Found.'
+                        });  
+                    });  
+                }).catch(function (err) {  
+                    conn.close();  
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });        
+                });  
+            }).catch(function (err) {  
+                conn.close();  
+                commonFun.errorLog(err);
+                res.status(404).json( {
+                    success: false,
+                    message: '404 - Not Found.'
+                });      
+            });  
+        }).catch(function (err) {  
+            conn.close();  
+            commonFun.errorLog(err);
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            });        
+        });  
+    }); 
 
     return router;
 };

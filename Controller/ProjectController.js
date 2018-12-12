@@ -611,6 +611,44 @@ var routes = function(){
                 });  
             });  
     });
+    
+    router.route('/PostFilesList/:id')
+    .get(function(req,res){
+        var _id = req.params.id;
+        //res.header("Content-Type", "application/json");
+        conn.connect().then(function ()   
+        { 
+            var request = new sql.Request(conn);
+            request.input("ptppf_id", sql.Int, _id);
+            request.execute('ProjectsPostFiles_ListAll').then(function (recordset)   
+                {  
+                    res.status(200).json(recordset.recordset);  
+                    conn.close();  
+                }) 
+                .catch(function (err) {  
+                    conn.close();    
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });
+                });  
+        })
+        .catch(function (err) {  
+            conn.close();  
+            commonFun.errorLog(err);
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            });   
+        });  
+    });
 
     router.route('/PostFilesAdd/')  
     .post(function (req, res) {  
@@ -728,6 +766,44 @@ var routes = function(){
             });       
         });  
     }); 
+
+    router.route('/FeedbackList/:id')
+    .get(function(req,res){
+        var _id = req.params.id;
+        //res.header("Content-Type", "application/json");
+        conn.connect().then(function ()   
+        { 
+            var request = new sql.Request(conn);
+            request.input("pfeedbackID", sql.Int, _id);
+            request.execute('ProjectFeedback_ListAll').then(function (recordset)   
+                {  
+                    res.status(200).json(recordset.recordset);  
+                    conn.close();  
+                }) 
+                .catch(function (err) {  
+                    conn.close();    
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });
+                });  
+        })
+        .catch(function (err) {  
+            conn.close();  
+            commonFun.errorLog(err);
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            });   
+        });  
+    });
 
     router.route('/FeedbackAdd/')  
     .post(function (req, res) {  

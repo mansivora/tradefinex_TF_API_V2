@@ -733,6 +733,44 @@ var routes = function(){
             });  
     });
 
+    router.route('/MembershipList/:id')
+    .get(function(req,res){
+        var _id = req.params.id;
+        //res.header("Content-Type", "application/json");
+        conn.connect().then(function ()   
+        { 
+            var request = new sql.Request(conn);
+            request.input("pid", sql.Int, _id); 
+            request.execute('Membership_ListAll').then(function (recordset)   
+                {  
+                    res.status(200).json(recordset.recordset);  
+                    conn.close();  
+                }) 
+                .catch(function (err) {  
+                    conn.close();    
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });
+                });  
+        })
+        .catch(function (err) {  
+            conn.close();  
+            commonFun.errorLog(err);
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            });   
+        });  
+    });
+
     router.route('/MembershipAdd/')  
     .post(function (req, res) {  
         conn.connect().then(function () {  
@@ -849,6 +887,47 @@ var routes = function(){
             });  
     });
 
+
+    router.route('/ContractSupplierList/:id')
+    .get(function(req,res){
+        var _id = req.params.id;
+        //res.header("Content-Type", "application/json");
+        conn.connect().then(function ()   
+        { 
+            var request = new sql.Request(conn);
+            request.input("ptfss_id", sql.Int, _id);
+            request.execute('SubContractSupplier_ListAll').then(function (recordset)   
+                {  
+                    res.status(200).json(recordset.recordset);  
+                    conn.close();  
+                }) 
+                .catch(function (err) {  
+                    conn.close();    
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });
+                });  
+        })
+        .catch(function (err) {  
+            conn.close();  
+            commonFun.errorLog(err);
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            });   
+        });  
+    });
+
+
+
     router.route('/ContractSupplierAdd/')  
     .post(function (req, res) {  
         conn.connect().then(function () {  
@@ -911,6 +990,44 @@ var routes = function(){
             });       
         });  
     }); 
+    
+    router.route('/SupplierReasonList/:id')
+    .get(function(req,res){
+        var _id = req.params.id;
+        //res.header("Content-Type", "application/json");
+        conn.connect().then(function ()   
+        { 
+            var request = new sql.Request(conn);
+            request.input("ptfssrr_id", sql.Int, _id);
+            request.execute('SupplierShipmentRejectionReason_ListAll').then(function (recordset)   
+                {  
+                    res.status(200).json(recordset.recordset);  
+                    conn.close();  
+                }) 
+                .catch(function (err) {  
+                    conn.close();    
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });
+                });  
+        })
+        .catch(function (err) {  
+            conn.close();  
+            commonFun.errorLog(err);
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            });   
+        });  
+    });
 
     router.route('/SupplierReasonAdd/')  
     .post(function (req, res) {  

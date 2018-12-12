@@ -213,6 +213,125 @@ var routes = function(){
         });  
     });
 
+    router.route('/CountryAdd/')  
+    .post(function (req, res) {  
+        conn.connect().then(function () {  
+            var transaction = new sql.Transaction(conn);  
+            transaction.begin().then(function () {  
+                var request = new sql.Request(transaction); 
+                request.input("ptfc_code", sql.VarChar, req.body.ptfc_code);
+                request.input("ptfc_name", sql.VarChar, req.body.ptfc_name);
+                request.input("ptfc_phonecode", sql.VarChar, req.body.ptfc_phonecode);
+                request.execute("CountryMaster_Add").then(function () {  
+                   
+                    transaction.commit().then(function (err, recordset) {
+                        //res.json(recordSet.recordset);
+                       res.status(200).json( {
+                        success: true,
+                        message: 'successful'
+                    });
+                    conn.close();  
+                    }).catch(function (err) {  
+                        conn.close();  
+                        commonFun.errorLog(err);
+                        res.status(404).json( {
+                            success: false,
+                            message: '404 - Not Found.'
+                        });  
+                    });  
+                }).catch(function (err) {  
+                    conn.close();  
+                    commonFun.errorLog(err);      
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });  
+                });  
+            }).catch(function (err) {  
+                conn.close();     
+                commonFun.errorLog(err);  
+                res.status(400).json( {
+                    success: false,
+                    message: '400 - Bad Request.'
+                });  
+            });  
+        }).catch(function (err) {  
+            conn.close();     
+            commonFun.errorLog(err);   
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            }); 
+           
+        });  
+    });
+
+    router.route('/CountryUpdate/:id')  
+    .put(function (req, res)  
+     {  
+        var _id = req.params.id;  
+        conn.connect().then(function () {  
+            var transaction = new sql.Transaction(conn);  
+            transaction.begin().then(function () {  
+                var request = new sql.Request(transaction); 
+                request.input("ptfc_id", sql.Int, _id);
+                request.input("ptfc_code", sql.VarChar, req.body.ptfc_code);
+                request.input("ptfc_name", sql.VarChar, req.body.ptfc_name);
+                request.input("ptfc_phonecode", sql.VarChar, req.body.ptfc_phonecode);
+                request.input("prow_deleted", sql.Int, req.body.prow_deleted);
+                request.execute("CountryMaster_Update").then(function () {  
+                    transaction.commit().then(function (recordSet) {  
+                        conn.close();  
+                        res.status(200).json( {
+                            success: true,
+                            message: 'successful'
+                        });
+                    }).catch(function (err) {  
+                        conn.close();  
+                        commonFun.errorLog(err);
+                        res.status(404).json( {
+                            success: false,
+                            message: '404 - Not Found.'
+                        });   
+                    });  
+                }).catch(function (err) {  
+                    conn.close();  
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });   
+                });  
+            }).catch(function (err) {  
+                conn.close();  
+                commonFun.errorLog(err);
+                res.status(400).json( {
+                    success: false,
+                    message: '400 - Bad Request.'
+                });  
+            });  
+        }).catch(function (err) {  
+                conn.close();  
+                commonFun.errorLog(err);
+                res.status(500).json({
+                    success: false,
+                    message: '500 - Server error.'
+                });  
+            });  
+    });
+
     router.route('/CurrencyList/:id')
     .get(function(req,res){
         var _id = req.params.id;
@@ -289,6 +408,125 @@ var routes = function(){
         });  
     });
 
+    router.route('/StateAdd/')  
+    .post(function (req, res) {  
+        conn.connect().then(function () {  
+            var transaction = new sql.Transaction(conn);  
+            transaction.begin().then(function () {  
+                var request = new sql.Request(transaction); 
+                request.input("ptfs_name", sql.VarChar, req.body.ptfs_name);
+                request.input("ptfs_country_ref", sql.Int, req.body.ptfs_country_ref);
+                request.input("prow_deleted", sql.Int, req.body.prow_deleted);
+                request.execute("StateMaster_Add").then(function () {  
+                   
+                    transaction.commit().then(function (err, recordset) {
+                        //res.json(recordSet.recordset);
+                       res.status(200).json( {
+                        success: true,
+                        message: 'successful'
+                    });
+                    conn.close();  
+                    }).catch(function (err) {  
+                        conn.close();  
+                        commonFun.errorLog(err);
+                        res.status(404).json( {
+                            success: false,
+                            message: '404 - Not Found.'
+                        });  
+                    });  
+                }).catch(function (err) {  
+                    conn.close();  
+                    commonFun.errorLog(err);      
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });  
+                });  
+            }).catch(function (err) {  
+                conn.close();     
+                commonFun.errorLog(err);  
+                res.status(400).json( {
+                    success: false,
+                    message: '400 - Bad Request.'
+                });  
+            });  
+        }).catch(function (err) {  
+            conn.close();     
+            commonFun.errorLog(err);   
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            }); 
+           
+        });  
+    });
+
+    router.route('/StateUpdate/:id')  
+    .put(function (req, res)  
+     {  
+        var _id = req.params.id;  
+        conn.connect().then(function () {  
+            var transaction = new sql.Transaction(conn);  
+            transaction.begin().then(function () {  
+                var request = new sql.Request(transaction); 
+                request.input("ptfs_id", sql.Int, _id);
+                request.input("ptfs_name", sql.VarChar, req.body.ptfs_name);
+                request.input("ptfs_country_ref", sql.Int, req.body.ptfs_country_ref);
+                request.input("prow_deleted", sql.Int, req.body.prow_deleted);
+                request.execute("StateMaster_Update").then(function () {  
+                    transaction.commit().then(function (recordSet) {  
+                        conn.close();  
+                        res.status(200).json( {
+                            success: true,
+                            message: 'successful'
+                        });
+                    }).catch(function (err) {  
+                        conn.close();  
+                        commonFun.errorLog(err);
+                        res.status(404).json( {
+                            success: false,
+                            message: '404 - Not Found.'
+                        });   
+                    });  
+                }).catch(function (err) {  
+                    conn.close();  
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });   
+                });  
+            }).catch(function (err) {  
+                conn.close();  
+                commonFun.errorLog(err);
+                res.status(400).json( {
+                    success: false,
+                    message: '400 - Bad Request.'
+                });  
+            });  
+        }).catch(function (err) {  
+                conn.close();  
+                commonFun.errorLog(err);
+                res.status(500).json({
+                    success: false,
+                    message: '500 - Server error.'
+                });  
+            });  
+    });
+
+
     router.route('/UnitList/:id')
     .get(function(req,res){
         var _id = req.params.id;
@@ -298,6 +536,159 @@ var routes = function(){
             var request = new sql.Request(conn);
             request.input("ptfun_id", sql.Int, _id)    
             request.execute('UnitMaster_ListAll').then(function (recordset)   
+                {  
+                    res.status(200).json(recordset.recordset);  
+                    conn.close();  
+                }) 
+                .catch(function (err) {  
+                    conn.close();    
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });
+                });  
+        })
+        .catch(function (err) {  
+            conn.close();  
+            commonFun.errorLog(err);
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            });   
+        });  
+    });
+
+
+    router.route('/UnitAdd/')  
+    .post(function (req, res) {  
+        conn.connect().then(function () {  
+            var transaction = new sql.Transaction(conn);  
+            transaction.begin().then(function () {  
+                var request = new sql.Request(transaction); 
+                request.input("ptfun_name", sql.VarChar, req.body.ptfun_name);
+                request.execute("UnitMaster_Add").then(function () {  
+                   
+                    transaction.commit().then(function (err, recordset) {
+                        //res.json(recordSet.recordset);
+                       res.status(200).json( {
+                        success: true,
+                        message: 'successful'
+                    });
+                    conn.close();  
+                    }).catch(function (err) {  
+                        conn.close();  
+                        commonFun.errorLog(err);
+                        res.status(404).json( {
+                            success: false,
+                            message: '404 - Not Found.'
+                        });  
+                    });  
+                }).catch(function (err) {  
+                    conn.close();  
+                    commonFun.errorLog(err);      
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });  
+                });  
+            }).catch(function (err) {  
+                conn.close();     
+                commonFun.errorLog(err);  
+                res.status(400).json( {
+                    success: false,
+                    message: '400 - Bad Request.'
+                });  
+            });  
+        }).catch(function (err) {  
+            conn.close();     
+            commonFun.errorLog(err);   
+            res.status(500).json({
+                success: false,
+                message: '500 - Server error.'
+            }); 
+           
+        });  
+    });
+
+    router.route('/UnitUpdate/:id')  
+    .put(function (req, res)  
+     {  
+        var _id = req.params.id;  
+        conn.connect().then(function () {  
+            var transaction = new sql.Transaction(conn);  
+            transaction.begin().then(function () {  
+                var request = new sql.Request(transaction); 
+                request.input("ptfun_id", sql.Int, _id);
+                request.input("ptfun_name", sql.VarChar, req.body.ptfun_name);
+                request.execute("UnitMaster_Update").then(function () {  
+                    transaction.commit().then(function (recordSet) {  
+                        conn.close();  
+                        res.status(200).json( {
+                            success: true,
+                            message: 'successful'
+                        });
+                    }).catch(function (err) {  
+                        conn.close();  
+                        commonFun.errorLog(err);
+                        res.status(404).json( {
+                            success: false,
+                            message: '404 - Not Found.'
+                        });   
+                    });  
+                }).catch(function (err) {  
+                    conn.close();  
+                    commonFun.errorLog(err);
+                    var errortxt=err.originalError.info.message;
+                    if(errortxt.indexOf("10")>=0){
+                        errortxt=""+err.originalError.info.message;
+                    }else{
+                         errortxt="400 - Bad Request."
+                    }
+                    res.status(400).json({
+                        success: false,
+                        message: errortxt
+                    });   
+                });  
+            }).catch(function (err) {  
+                conn.close();  
+                commonFun.errorLog(err);
+                res.status(400).json( {
+                    success: false,
+                    message: '400 - Bad Request.'
+                });  
+            });  
+        }).catch(function (err) {  
+                conn.close();  
+                commonFun.errorLog(err);
+                res.status(500).json({
+                    success: false,
+                    message: '500 - Server error.'
+                });  
+            });  
+    });
+
+    router.route('/SubscriptionList/:id')
+    .get(function(req,res){
+        var _id = req.params.id;
+        //res.header("Content-Type", "application/json");
+        conn.connect().then(function ()   
+        { 
+            var request = new sql.Request(conn);
+            request.input("ptfs_id", sql.Int, _id);
+            request.execute('Subscription_ListAll').then(function (recordset)   
                 {  
                     res.status(200).json(recordset.recordset);  
                     conn.close();  
